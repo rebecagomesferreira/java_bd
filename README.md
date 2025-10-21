@@ -18,8 +18,7 @@ O tema do projeto é **reciclagem e sustentabilidade**, abordando a criação de
 ## ⚙️ Funcionalidades do Sistema
 - Cadastro de fornecedores e clientes  
 - Cadastro de materiais recicláveis (papel, vidro, plástico, metal etc.)  
-- Controle de entrada e saída de materiais  
-- Geração de relatórios de coleta e reaproveitamento  
+- Controle de entrada e saída de materiais   
 - Interface simples e intuitiva  
 
 ---
