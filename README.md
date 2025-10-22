@@ -38,7 +38,7 @@ Essas tabelas se relacionam para garantir o controle completo do fluxo de materi
 - **Linguagem:** Java  
 - **Banco de Dados:** MySQL  
 - **IDE:** NetBeans / VisualStudioCode  
-- **Padrão de Projeto:** MVC (Model, View, Controller)
+- **Padrão de Projeto:** MVC (Model, View, Controller,DAO)
 
 ---
 
