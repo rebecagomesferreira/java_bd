@@ -1,54 +1,54 @@
 package dao;
 
 import model.Material;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*; // classes JDBC
+import java.util.ArrayList; // método listar
+import java.util.List; // método buscar
 
 public class MaterialDAO {
 
-    public void inserir(Material m) {
+    public void inserir(Material m) { // cadastra novo material
         String sql = "INSERT INTO MATERIAL (tipo, descricao, preco_kg) VALUES (?, ?, ?)";
-        try (Connection conn = ConexaoBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, m.getTipo());
+        try (Connection conn = ConexaoBD.getConnection(); // conexão com banco
+             PreparedStatement stmt = conn.prepareStatement(sql)) { // envia comando ao sql
+            stmt.setString(1, m.getTipo()); // insere dados
             stmt.setString(2, m.getDescricao());
             stmt.setDouble(3, m.getPrecoKg());
             stmt.executeUpdate();
             System.out.println("Material cadastrado.");
         } catch (SQLException e) {
-            System.out.println("Erro ao inserir material: " + e.getMessage());
+            System.out.println("Erro ao inserir material: " + e.getMessage()); // caso de erro
         }
     }
 
-    public List<Material> listar() {
-        List<Material> lista = new ArrayList<>();
+    public List<Material> listar() { // lista materiais
+        List<Material> lista = new ArrayList<>(); // lista objetos do tipo material
         String sql = "SELECT * FROM MATERIAL";
-        try (Connection conn = ConexaoBD.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                Material m = new Material();
-                m.setId(rs.getInt("id_material"));
+        try (Connection conn = ConexaoBD.getConnection(); // conexão com o banco
+             Statement stmt = conn.createStatement(); // envia mensagem
+             ResultSet rs = stmt.executeQuery(sql)) { // recebe resultado
+            while (rs.next()) { // lista até se torna falso
+                Material m = new Material(); // objeto tipo material
+                m.setId(rs.getInt("id_material")); // listagem
                 m.setTipo(rs.getString("tipo"));
                 m.setDescricao(rs.getString("descricao"));
                 m.setPrecoKg(rs.getDouble("preco_kg"));
-                lista.add(m);
+                lista.add(m); // adiciona a lista
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao listar materiais: " + e.getMessage());
+            System.out.println("Erro ao listar materiais: " + e.getMessage()); // caso de erro
         }
-        return lista;
+        return lista; // retorna a lista completa
     }
 
-    public Material buscarPorId(int id) {
+    public Material buscarPorId(int id) { // busca material pelo id
         String sql = "SELECT * FROM MATERIAL WHERE id_material = ?";
-        try (Connection conn = ConexaoBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                Material m = new Material();
+        try (Connection conn = ConexaoBD.getConnection(); // conexão com o banco
+             PreparedStatement stmt = conn.prepareStatement(sql)) { // envia requisição ao banco
+            stmt.setInt(1, id); // substitui "?" pelo id
+            ResultSet rs = stmt.executeQuery(); // conjunto de resultados de uma consulta do sql
+            if (rs.next()) { // consulta caso exista
+                Material m = new Material(); // objeto do tipo material
                 m.setId(rs.getInt("id_material"));
                 m.setTipo(rs.getString("tipo"));
                 m.setDescricao(rs.getString("descricao"));
@@ -56,18 +56,18 @@ public class MaterialDAO {
                 return m;
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao buscar material: " + e.getMessage());
+            System.out.println("Erro ao buscar material: " + e.getMessage()); // caso de erro
         }
-        return null;
+        return null; // caso não exista retorna null
     }
 
-    public void atualizar(Material m) {
+    public void atualizar(Material m) { // atualiza material
         StringBuilder sql = new StringBuilder("UPDATE MATERIAL SET ");
-        boolean primeiro = true;
+        boolean primeiro = true; // controla as vírgulas 
 
         if (m.getTipo() != null && !m.getTipo().isEmpty()) {
             sql.append("tipo = ?");
-            primeiro = false;
+            primeiro = false; // atualiza caso necessário 
         }
         if (m.getDescricao() != null && !m.getDescricao().isEmpty()) {
             if (!primeiro) sql.append(", ");
@@ -79,37 +79,37 @@ public class MaterialDAO {
             sql.append("preco_kg = ?");
         }
 
-        sql.append(" WHERE id_material = ?");
+        sql.append(" WHERE id_material = ?"); // condição pelo id
 
-        try (Connection conn = ConexaoBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+        try (Connection conn = ConexaoBD.getConnection(); // conexão com o banco
+             PreparedStatement stmt = conn.prepareStatement(sql.toString())) { // comando sql executado
 
-            int idx = 1;
-            if (m.getTipo() != null && !m.getTipo().isEmpty()) stmt.setString(idx++, m.getTipo());
+            int idx = 1; // conta posições 
+            if (m.getTipo() != null && !m.getTipo().isEmpty()) stmt.setString(idx++, m.getTipo()); // preenche
             if (m.getDescricao() != null && !m.getDescricao().isEmpty()) stmt.setString(idx++, m.getDescricao());
             if (m.getPrecoKg() >= 0) stmt.setDouble(idx++, m.getPrecoKg());
-            stmt.setInt(idx, m.getId());
+            stmt.setInt(idx, m.getId()); // comando sql
 
             int linhas = stmt.executeUpdate();
-            if (linhas > 0) {
+            if (linhas > 0) { // caso o contador for maior que 0 atualizada as linhas desejadas
                 System.out.println("Material atualizado.");
             } else {
-                System.out.println("Nenhum material encontrado com esse ID.");
+                System.out.println("Nenhum material encontrado com esse ID."); // erro de id
             }
         } catch (SQLException e) {
-            System.out.println("Erro ao atualizar material: " + e.getMessage());
+            System.out.println("Erro ao atualizar material: " + e.getMessage()); // caso de erro
         }
     }
 
-    public void deletar(int id) {
+    public void deletar(int id) { // deleta material
         String sql = "DELETE FROM MATERIAL WHERE id_material = ?";
-        try (Connection conn = ConexaoBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
+        try (Connection conn = ConexaoBD.getConnection(); // conexão com o banco
+             PreparedStatement stmt = conn.prepareStatement(sql)) { // comando sql
+            stmt.setInt(1, id); // captura do id
+            stmt.executeUpdate(); // exclui caso de certo
             System.out.println("Material deletado.");
         } catch (SQLException e) {
-            System.out.println("Erro ao deletar material: " + e.getMessage());
+            System.out.println("Erro ao deletar material: " + e.getMessage()); // caso de erro
         }
     }
 }
