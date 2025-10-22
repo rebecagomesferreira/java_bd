@@ -7,16 +7,16 @@ public class Fornecedor {
     private String telefone;
     private String tipo;
 
-    // Construtores
-    public Fornecedor() {}
-    public Fornecedor(String cpfCnpj, String nome, String telefone, String tipo) {
+    // construtores
+    public Fornecedor () {}
+    public Fornecedor(String cpfCnpj, String nome, String telefone, String tipo) { 
         this.cpfCnpj = cpfCnpj;
         this.nome = nome;
         this.telefone = telefone;
         this.tipo = tipo;
     }
 
-    // Getters e Setters
+    // getters e setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public String getCpfCnpj() { return cpfCnpj; }
@@ -29,6 +29,7 @@ public class Fornecedor {
     public void setTipo(String tipo) { this.tipo = tipo; }
 
     @Override
+    // exibe a saída
     public String toString() {
         return String.format("\n%d:\n%s\n%s\n%s\n%s\n", id, nome, cpfCnpj, telefone, tipo);
     }
